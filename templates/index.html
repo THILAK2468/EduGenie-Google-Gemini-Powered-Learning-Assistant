@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduGenie — a study catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+
+<div class="catalog">
+
+  <header class="catalog__header">
+    <div class="stamp-logo" aria-hidden="true">EG</div>
+    <div class="header-text">
+      <h1>EduGenie</h1>
+      <p class="tagline">a study catalog, always open</p>
+    </div>
+  </header>
+
+  <div class="catalog__body">
+
+    <nav class="drawer" aria-label="Study modules">
+      <button class="tab active" data-module="qa">
+        <span class="tab__label">Ask</span>
+        <span class="tab__sub">quick answers</span>
+      </button>
+      <button class="tab" data-module="explain">
+        <span class="tab__label">Explain</span>
+        <span class="tab__sub">plain-terms concepts</span>
+      </button>
+      <button class="tab" data-module="quiz">
+        <span class="tab__label">Quiz</span>
+        <span class="tab__sub">test yourself</span>
+      </button>
+      <button class="tab" data-module="summarize">
+        <span class="tab__label">Summarize</span>
+        <span class="tab__sub">condense a passage</span>
+      </button>
+      <button class="tab" data-module="learn">
+        <span class="tab__label">Roadmap</span>
+        <span class="tab__sub">plan a subject</span>
+      </button>
+    </nav>
+
+    <main class="card" id="card" aria-live="polite">
+      <!-- filled by script.js per active module -->
+    </main>
+
+  </div>
+</div>
+
+<script src="{{ url_for('static', path='/script.js') }}"></script>
+</body>
+</html>
