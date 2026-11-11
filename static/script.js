@@ -4,6 +4,14 @@
 const API_BASE = ""; // same origin as this page; change if backend is hosted elsewhere
 const USER_ID = "demo-user"; // placeholder until real auth/user system exists
 
+let currentMode = "auto";
+const modeSelectEl = document.getElementById("mode-select");
+if (modeSelectEl) {
+  modeSelectEl.addEventListener("change", (e) => {
+    currentMode = e.target.value;
+  });
+}
+
 const cardEl = document.getElementById("card");
 const tabs = document.querySelectorAll(".tab");
 
@@ -13,12 +21,13 @@ const tabs = document.querySelectorAll(".tab");
 const MODULES = {
   qa: {
     title: "Ask a question",
-    hint: "Routed to the local model — fast, no daily limit.",
+    hint: "Quick direct answers powered by Gemini cloud with local fallback.",
     fields: [{ name: "query_text", label: "Your question", type: "input" }],
     async call(values) {
       const params = new URLSearchParams({
         user_id: USER_ID,
         query_text: values.query_text,
+        mode: currentMode,
       });
       const res = await fetch(`${API_BASE}/qa?${params}`);
       return res;
@@ -26,13 +35,13 @@ const MODULES = {
   },
   explain: {
     title: "Explain a concept",
-    hint: "Routed to the cloud model, with local fallback if it's unavailable.",
+    hint: "Plain-terms concept explanations powered by Gemini cloud with local fallback.",
     fields: [{ name: "topic", label: "Topic to explain", type: "input" }],
     async call(values) {
       const res = await fetch(`${API_BASE}/explain`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: USER_ID, topic: values.topic }),
+        body: JSON.stringify({ user_id: USER_ID, topic: values.topic, mode: currentMode }),
       });
       return res;
     },
@@ -45,7 +54,7 @@ const MODULES = {
       const res = await fetch(`${API_BASE}/quiz`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: USER_ID, topic: values.topic }),
+        body: JSON.stringify({ user_id: USER_ID, topic: values.topic, mode: currentMode }),
       });
       return res;
     },
@@ -58,7 +67,7 @@ const MODULES = {
       const res = await fetch(`${API_BASE}/summarize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: USER_ID, text: values.text }),
+        body: JSON.stringify({ user_id: USER_ID, text: values.text, mode: currentMode }),
       });
       return res;
     },
@@ -71,6 +80,7 @@ const MODULES = {
       const params = new URLSearchParams({
         user_id: USER_ID,
         subject: values.subject,
+        mode: currentMode,
       });
       const res = await fetch(`${API_BASE}/learn/recommendations?${params}`);
       return res;
@@ -201,10 +211,16 @@ function renderResponse(container, data) {
   let badgeHtml = "";
   if (data.model_used === "gemini") {
     badgeHtml = `<span class="badge badge--cloud">◉ cloud</span>`;
+  } else if (data.model_used === "gemini-fallback") {
+    badgeHtml = `<span class="badge badge--cloud" style="border: 1px dashed var(--ochre);">◉ cloud · fallback</span>`;
   } else if (data.model_used === "lamini") {
     badgeHtml = `<span class="badge badge--local">◉ local</span>`;
   } else if (data.model_used === "lamini-fallback") {
     badgeHtml = `<span class="badge badge--fallback">◉ local · fallback</span>`;
+  } else if (data.model_used === "offline-fallback") {
+    badgeHtml = `<span class="badge badge--blocked">◉ offline</span>`;
+  } else if (data.model_used === "guardrail") {
+    badgeHtml = `<span class="badge badge--blocked">◉ blocked</span>`;
   }
 
   const text = extractResponseText(data);

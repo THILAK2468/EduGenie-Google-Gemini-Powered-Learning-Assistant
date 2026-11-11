@@ -18,6 +18,14 @@
       <h1>EduGenie</h1>
       <p class="tagline">a study catalog, always open</p>
     </div>
+    <div class="mode-selector" style="margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-family: var(--font-mono);">
+      <label for="mode-select" style="color: var(--ink-soft);">Mode:</label>
+      <select id="mode-select" style="padding: 6px 10px; border-radius: 4px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-family: var(--font-mono); font-size: 0.82rem; cursor: pointer;">
+        <option value="auto">⚡ Auto Hybrid (Fastest ~1.5s)</option>
+        <option value="cloud">☁️ Cloud (Gemini)</option>
+        <option value="local">💻 Local (LaMini ~7s)</option>
+      </select>
+    </div>
   </header>
 
   <div class="catalog__body">
