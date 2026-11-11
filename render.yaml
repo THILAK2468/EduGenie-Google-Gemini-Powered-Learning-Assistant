@@ -13,3 +13,4 @@ services:
         value: gemini-3.1-flash-lite
       - key: ENABLE_LOCAL_LAMINI
         value: "false"
+
